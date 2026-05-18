@@ -117,3 +117,23 @@ def get_me(current_user: dict = Depends(get_current_user)):
     only runs if authentication succeeds.
     """
     return UserPublic(**current_user)
+
+
+from app.auth.dependencies import get_current_admin
+
+
+@router.get("/users", response_model=list[UserPublic])
+def list_all_users(current_admin: dict = Depends(get_current_admin)):
+    """
+    Return a list of all registered users. Admin only.
+
+    Uses the get_current_admin dependency which:
+    1. First runs get_current_user to verify the JWT and load the user
+    2. Then verifies the user's role is "admin", raising 403 otherwise
+
+    The response is filtered through UserPublic so sensitive fields
+    (hashed_password, _id) are stripped before sending to the client.
+    """
+    db = get_db()
+    users_cursor = db["users"].find()
+    return [UserPublic(**doc) for doc in users_cursor]

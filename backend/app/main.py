@@ -1,14 +1,15 @@
 """
 MealDeal API — application entry point.
 
-Defines the FastAPI app instance and wires up MongoDB lifecycle
-management via the lifespan context manager (FastAPI's recommended
-pattern as of v0.93+, replacing on_event handlers).
+Defines the FastAPI app instance, wires up MongoDB lifecycle management
+via the lifespan context manager, and registers route modules.
 """
 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+
 from app.database import connect_to_mongo, close_mongo_connection
+from app.routes import auth as auth_routes
 
 
 @asynccontextmanager
@@ -20,6 +21,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="MealDeal API", version="0.1.0", lifespan=lifespan)
+
+# Route registration — each feature lives in its own module under app/routes/
+app.include_router(auth_routes.router)
 
 
 @app.get("/")

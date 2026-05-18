@@ -99,3 +99,21 @@ def login(payload: UserLogin):
         "token_type": "bearer",
         "user": UserPublic(**user_doc).model_dump(mode="json"),
     }
+
+
+# --- Protected routes below this line ---
+
+from fastapi import Depends
+from app.auth.dependencies import get_current_user
+
+
+@router.get("/me", response_model=UserPublic)
+def get_me(current_user: dict = Depends(get_current_user)):
+    """
+    Return the current authenticated user's public profile.
+
+    Requires a valid JWT in the Authorization header. The actual auth
+    check happens in the get_current_user dependency — this handler
+    only runs if authentication succeeds.
+    """
+    return UserPublic(**current_user)

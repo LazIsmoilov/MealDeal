@@ -441,3 +441,25 @@
   font-size: 0.8rem;
   color: var(--color-ink-soft);
 }
+
+/* Order-on-platform link inside comparison rows */
+.order-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-ink-soft);
+}
+.order-link:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.order-link-best {
+  color: var(--color-savings);
+}
+.order-link-best:hover {
+  color: var(--color-savings);
+}

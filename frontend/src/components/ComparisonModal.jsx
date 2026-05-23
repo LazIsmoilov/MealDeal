@@ -11,8 +11,9 @@
  */
 
 import { useEffect, useState } from "react";
-import { X, TrendingDown, BadgeCheck } from "lucide-react";
+import { X, TrendingDown, BadgeCheck, ExternalLink } from "lucide-react";
 import { getComparison } from "../api/comparison";
+import { getPlatformUrl } from "../utils/platformLinks";
 
 export default function ComparisonModal({ menuItem, onClose }) {
   const [comparison, setComparison] = useState(null);
@@ -100,6 +101,17 @@ export default function ComparisonModal({ menuItem, onClose }) {
                         <span className="price-breakdown">
                           ${p.price.toFixed(2)} + ${p.delivery_fee.toFixed(2)} delivery
                         </span>
+                        {getPlatformUrl(p.platform) && (
+                            <a
+                            className={`order-link ${p.is_cheapest ? "order-link-best" : ""}`}
+                            href={getPlatformUrl(p.platform)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Order on {p.platform}
+                            <ExternalLink size={13} />
+                          </a>
+                        )}
                       </div>
                     </li>
                   ))}

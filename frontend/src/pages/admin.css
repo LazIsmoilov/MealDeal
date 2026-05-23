@@ -1,0 +1,139 @@
+/* Admin dashboard styling. */
+
+.admin-main {
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-8);
+}
+
+.admin-title {
+  font-size: 2rem;
+  margin-bottom: var(--space-5);
+}
+
+/* Tabs */
+.admin-tabs {
+  display: flex;
+  gap: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-6);
+}
+
+.admin-tab {
+  padding: var(--space-3) var(--space-4);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-ink-soft);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.admin-tab:hover { color: var(--color-ink); }
+.admin-tab-active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+/* Section + form */
+.admin-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.admin-form {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-form-title {
+  font-size: 1.1rem;
+  margin-bottom: var(--space-4);
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.admin-form-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* Filter row */
+.admin-filter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-ink-soft);
+}
+.admin-filter select { max-width: 280px; }
+
+/* Table */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-table th {
+  background: var(--color-bg);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-soft);
+}
+
+.admin-table tr:last-child td { border-bottom: none; }
+
+.admin-row-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--color-ink-soft);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.icon-btn:hover { background: var(--color-bg); color: var(--color-ink); }
+.icon-btn-danger:hover { background: #fdeaea; color: var(--color-danger); }
+
+/* Role pills */
+.role-pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+}
+.role-admin {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+.role-user {
+  background: var(--color-bg);
+  color: var(--color-ink-soft);
+}

@@ -2,12 +2,15 @@
 MealDeal API — application entry point.
 
 Defines the FastAPI app instance, wires up MongoDB lifecycle management
-via the lifespan context manager, and registers route modules.
+via the lifespan context manager, configures CORS for the frontend, and
+registers route modules.
 """
 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
+from app.config import settings
 from app.database import connect_to_mongo, close_mongo_connection
 from app.routes import auth as auth_routes
 from app.routes import restaurants as restaurant_routes
@@ -25,6 +28,17 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="MealDeal API", version="0.1.0", lifespan=lifespan)
+
+# CORS — allow the React dev server to call this API from a different origin.
+# Browsers block cross-origin requests by default; this middleware adds the
+# headers that tell the browser our frontend is a trusted caller.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[settings.FRONTEND_ORIGIN],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Route registration — each feature lives in its own module under app/routes/
 app.include_router(auth_routes.router)

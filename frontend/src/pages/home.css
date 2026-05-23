@@ -1,0 +1,155 @@
+/* Navbar, home page, and restaurant grid styling. */
+
+/* --- Navbar --- */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+.navbar-brand:hover { text-decoration: none; }
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.navbar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-ink-soft);
+}
+
+.navbar-user {
+  font-size: 0.92rem;
+  color: var(--color-ink-soft);
+}
+
+.navbar-logout {
+  padding: var(--space-2) var(--space-4);
+}
+
+/* --- Home hero --- */
+.home-main {
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-8);
+}
+
+.home-hero {
+  max-width: 640px;
+  margin-bottom: var(--space-8);
+}
+
+.home-title {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  margin-bottom: var(--space-4);
+}
+
+.home-title-accent {
+  color: var(--color-primary);
+  font-style: italic;
+}
+
+.home-subtitle {
+  font-size: 1.05rem;
+  color: var(--color-ink-soft);
+}
+
+.home-status {
+  padding: var(--space-6) 0;
+  color: var(--color-ink-soft);
+}
+
+/* --- Restaurant grid --- */
+.restaurant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-5);
+}
+
+.restaurant-card {
+  overflow: hidden;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.restaurant-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
+.restaurant-card-media {
+  position: relative;
+  height: 130px;
+  background: linear-gradient(135deg, var(--color-primary-soft), var(--color-savings-soft));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.restaurant-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.restaurant-card-initial {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  opacity: 0.6;
+}
+
+.restaurant-card-cuisine {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+}
+
+.restaurant-card-body {
+  padding: var(--space-4);
+}
+
+.restaurant-card-name {
+  font-size: 1.1rem;
+  margin-bottom: var(--space-1);
+}
+
+.restaurant-card-suburb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-ink-soft);
+  font-size: 0.88rem;
+}

@@ -32,6 +32,7 @@ from app.models.price_listing import (
     PriceListingPublic,
     price_listing_doc_to_public,
 )
+from app.websockets.manager import manager
 
 
 router = APIRouter(prefix="/price-listings", tags=["price-listings"])
@@ -87,13 +88,14 @@ def get_price_listing(price_listing_id: str):
 
 
 @router.post("", response_model=PriceListingPublic, status_code=status.HTTP_201_CREATED)
-def create_price_listing(
+async def create_price_listing(
     payload: PriceListingCreate,
     current_admin: dict = Depends(get_current_admin),
 ):
     """Create a price listing. Admin only.
 
     Validates the menu item exists and enforces one-price-per-platform.
+    Broadcasts the change so clients viewing this item update live.
     """
     db = get_db()
     _ensure_menu_item_exists(db, payload.menu_item_id)
@@ -114,19 +116,25 @@ def create_price_listing(
     doc["updated_at"] = datetime.now(timezone.utc)
     result = db["price_listings"].insert_one(doc)
     doc["_id"] = result.inserted_id
+
+    await manager.broadcast({
+        "type": "price_updated",
+        "menu_item_id": payload.menu_item_id,
+    })
+
     return price_listing_doc_to_public(doc)
 
 
 @router.patch("/{price_listing_id}", response_model=PriceListingPublic)
-def update_price_listing(
+async def update_price_listing(
     price_listing_id: str,
     payload: PriceListingUpdate,
     current_admin: dict = Depends(get_current_admin),
 ):
     """Update a price listing's price and/or delivery fee. Admin only.
 
-    Refreshes updated_at so the change timestamp is accurate — this powers
-    the 'price updated recently' signal in the UI later.
+    Refreshes updated_at so the change timestamp is accurate, then broadcasts
+    the change so clients viewing this item update live.
     """
     db = get_db()
     object_id = _parse_object_id(price_listing_id)
@@ -149,20 +157,41 @@ def update_price_listing(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Price listing not found",
         )
+
+    await manager.broadcast({
+        "type": "price_updated",
+        "menu_item_id": result["menu_item_id"],
+    })
+
     return price_listing_doc_to_public(result)
 
 
 @router.delete("/{price_listing_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_price_listing(
+async def delete_price_listing(
     price_listing_id: str,
     current_admin: dict = Depends(get_current_admin),
 ):
-    """Delete a price listing. Admin only."""
+    """Delete a price listing. Admin only.
+
+    Looks up the listing first so we know which menu item to broadcast about,
+    then deletes and notifies connected clients.
+    """
     db = get_db()
-    result = db["price_listings"].delete_one({"_id": _parse_object_id(price_listing_id)})
-    if result.deleted_count == 0:
+    object_id = _parse_object_id(price_listing_id)
+
+    # Fetch first so we know the menu_item_id for the broadcast.
+    listing = db["price_listings"].find_one({"_id": object_id})
+    if listing is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Price listing not found",
         )
+
+    db["price_listings"].delete_one({"_id": object_id})
+
+    await manager.broadcast({
+        "type": "price_updated",
+        "menu_item_id": listing["menu_item_id"],
+    })
+
     return None

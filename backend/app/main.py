@@ -12,6 +12,7 @@ from app.database import connect_to_mongo, close_mongo_connection
 from app.routes import auth as auth_routes
 from app.routes import restaurants as restaurant_routes
 from app.routes import menu_items as menu_item_routes
+from app.routes import price_listings as price_listing_routes
 
 
 @asynccontextmanager
@@ -28,6 +29,7 @@ app = FastAPI(title="MealDeal API", version="0.1.0", lifespan=lifespan)
 app.include_router(auth_routes.router)
 app.include_router(restaurant_routes.router)
 app.include_router(menu_item_routes.router)
+app.include_router(price_listing_routes.router)
 
 
 @app.get("/")

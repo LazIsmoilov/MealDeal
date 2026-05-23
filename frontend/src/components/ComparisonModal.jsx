@@ -10,37 +10,61 @@
  * is self-contained — the parent only decides which item to show.
  */
 
-import { useEffect, useState } from "react";
-import { X, TrendingDown, BadgeCheck, ExternalLink } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { X, TrendingDown, BadgeCheck, ExternalLink, Zap } from "lucide-react";
 import { getComparison } from "../api/comparison";
 import { getPlatformUrl } from "../utils/platformLinks";
+import { usePriceUpdates } from "../hooks/usePriceUpdates";
 
 export default function ComparisonModal({ menuItem, onClose }) {
   const [comparison, setComparison] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [liveUpdated, setLiveUpdated] = useState(false);
 
+  // Fetch the comparison. Wrapped in useCallback so the live-update handler
+  // can reuse it. This silent refresh updates data without flashing the
+  // loading state — used when a live price update arrives.
+  const loadComparison = useCallback(async () => {
+    try {
+      const data = await getComparison(menuItem.id);
+      setComparison(data);
+      setError("");
+    } catch {
+      setError("Couldn't load price comparison.");
+    }
+  }, [menuItem.id]);
+
+  // Initial load when the modal opens. Inlined here (rather than calling
+  // loadComparison directly) so the loading spinner shows on first open,
+  // with a cancelled guard to avoid setting state after unmount.
   useEffect(() => {
     let cancelled = false;
-
-    async function load() {
-      setLoading(true);
-      setError("");
+    (async () => {
       try {
         const data = await getComparison(menuItem.id);
-        if (!cancelled) setComparison(data);
+        if (!cancelled) {
+          setComparison(data);
+          setError("");
+        }
       } catch {
         if (!cancelled) setError("Couldn't load price comparison.");
       } finally {
         if (!cancelled) setLoading(false);
       }
-    }
-
-    load();
+    })();
     return () => {
       cancelled = true;
     };
   }, [menuItem.id]);
+
+  // Subscribe to live price updates for this item. When a broadcast arrives,
+  // refetch the comparison and briefly flash a "live updated" indicator.
+  usePriceUpdates(menuItem.id, () => {
+    loadComparison();
+    setLiveUpdated(true);
+    setTimeout(() => setLiveUpdated(false), 2500);
+  });
 
   // Close when the dark backdrop (not the panel) is clicked.
   function handleBackdropClick(e) {
@@ -55,7 +79,15 @@ export default function ComparisonModal({ menuItem, onClose }) {
         </button>
 
         <h2 className="modal-title">{menuItem.name}</h2>
-        <p className="modal-subtitle">Price comparison across platforms</p>
+        <p className="modal-subtitle">
+          Price comparison across platforms
+          {liveUpdated && (
+            <span className="live-badge">
+              <Zap size={13} />
+              Updated live
+            </span>
+          )}
+        </p>
 
         {loading && <p className="home-status">Comparing prices…</p>}
         {error && <p className="home-status error-text">{error}</p>}

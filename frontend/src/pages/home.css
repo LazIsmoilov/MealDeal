@@ -463,3 +463,22 @@
 .order-link-best:hover {
   color: var(--color-savings);
 }
+
+/* Live-update indicator in the comparison modal */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-left: var(--space-3);
+  background: var(--color-savings);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  animation: live-pop 0.3s ease;
+}
+@keyframes live-pop {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

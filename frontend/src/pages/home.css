@@ -291,3 +291,153 @@
   white-space: nowrap;
   margin-left: var(--space-4);
 }
+
+/* --- Comparison modal --- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 26, 23, 0.5);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 50;
+  animation: backdrop-in 0.18s ease;
+}
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  background: var(--color-surface);
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: var(--space-6);
+  box-shadow: var(--shadow-lg);
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: panel-up 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes panel-up {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* On wider screens, center the panel instead of bottom-sheet */
+@media (min-width: 640px) {
+  .modal-backdrop { align-items: center; }
+  .modal-panel { border-radius: var(--radius); }
+}
+
+.modal-close {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--color-ink-soft);
+  transition: background 0.15s ease;
+}
+.modal-close:hover { background: var(--color-bg); }
+
+.modal-title {
+  font-size: 1.6rem;
+  margin-bottom: var(--space-1);
+  padding-right: var(--space-6);
+}
+
+.modal-subtitle {
+  color: var(--color-ink-soft);
+  font-size: 0.92rem;
+  margin-bottom: var(--space-5);
+}
+
+/* Savings banner */
+.savings-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-savings-soft);
+  color: var(--color-savings);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-5);
+}
+.savings-banner strong { font-size: 1.05rem; }
+
+/* Price list */
+.price-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s ease;
+}
+
+.price-row-best {
+  border-color: var(--color-savings);
+  border-width: 2px;
+  background: var(--color-savings-soft);
+}
+
+.price-platform {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.price-platform-name {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.best-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: var(--color-savings);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  width: fit-content;
+}
+
+.price-figures {
+  text-align: right;
+}
+
+.price-total {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
+.price-row-best .price-total {
+  color: var(--color-savings);
+}
+
+.price-breakdown {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--color-ink-soft);
+}

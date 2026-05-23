@@ -15,6 +15,7 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Search, MapPin } from "lucide-react";
 import Navbar from "../components/Navbar";
 import MenuItemCard from "../components/MenuItemCard";
+import ComparisonModal from "../components/ComparisonModal";
 import { getRestaurant, getMenuItems } from "../api/restaurants";
 
 export default function RestaurantDetailPage() {
@@ -25,6 +26,7 @@ export default function RestaurantDetailPage() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -67,8 +69,7 @@ export default function RestaurantDetailPage() {
   }, [query, menuItems]);
 
   function handleCompare(item) {
-    // Placeholder until the comparison modal is wired next commit.
-    console.log("Compare:", item.name);
+    setSelectedItem(item);
   }
 
   return (
@@ -126,6 +127,13 @@ export default function RestaurantDetailPage() {
           </>
         )}
       </main>
+
+      {selectedItem && (
+        <ComparisonModal
+          menuItem={selectedItem}
+          onClose={() => setSelectedItem(null)}
+        />
+      )}
     </>
   );
 }

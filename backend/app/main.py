@@ -10,6 +10,7 @@ from fastapi import FastAPI
 
 from app.database import connect_to_mongo, close_mongo_connection
 from app.routes import auth as auth_routes
+from app.routes import restaurants as restaurant_routes
 
 
 @asynccontextmanager
@@ -24,6 +25,7 @@ app = FastAPI(title="MealDeal API", version="0.1.0", lifespan=lifespan)
 
 # Route registration — each feature lives in its own module under app/routes/
 app.include_router(auth_routes.router)
+app.include_router(restaurant_routes.router)
 
 
 @app.get("/")

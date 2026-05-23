@@ -13,6 +13,7 @@ from app.routes import auth as auth_routes
 from app.routes import restaurants as restaurant_routes
 from app.routes import menu_items as menu_item_routes
 from app.routes import price_listings as price_listing_routes
+from app.routes import comparison as comparison_routes
 
 
 @asynccontextmanager
@@ -30,6 +31,7 @@ app.include_router(auth_routes.router)
 app.include_router(restaurant_routes.router)
 app.include_router(menu_item_routes.router)
 app.include_router(price_listing_routes.router)
+app.include_router(comparison_routes.router)
 
 
 @app.get("/")

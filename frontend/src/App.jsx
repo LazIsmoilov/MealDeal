@@ -6,15 +6,17 @@
  * application — components swap in place rather than reloading the document.
  *
  * Route map (this commit):
- *   /login      public   login page
- *   /register   public   registration page
- *   /           private  home page (restaurant grid)
+ *   /login              public   login page
+ *   /register           public   registration page
+ *   /                   private  home page (restaurant grid)
+ *   /restaurants/:id    private  restaurant detail + menu live search
  */
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
+import RestaurantDetailPage from "./pages/RestaurantDetailPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./pages/auth.css";
 import "./pages/home.css";
@@ -30,6 +32,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/restaurants/:id"
+          element={
+            <ProtectedRoute>
+              <RestaurantDetailPage />
             </ProtectedRoute>
           }
         />
